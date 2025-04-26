@@ -39,3 +39,21 @@ This visualization flow will later be integrated into a larger system for my fin
 
     > The notebook already includes a setup cell that installs all necessary dependencies.  
 You don't need to install anything manually. Just run the cells in order.
+
+    
+### Usage 
+
+Once the notebook is running, use the following function to generate a visualization of `<package_name>`'s daily downloads over the past `<num_weeks>` weeks:
+
+```python
+visualize_daily_downloads_in_past_weeks(package_name, num_weeks)
+```
+
+Example (in the last cell of the notebook):
+
+```python
+visualize_daily_downloads_in_past_weeks("@heroui/dom-animation", 20)
+```
+
+The code above generates the visualization shown in the [Overview](#overview) section, based on daily download data for the package `@heroui/dom-animation`over the past 20 weeks.
+ 
