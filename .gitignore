@@ -1,0 +1,28 @@
+# Python bytecode
+__pycache__/
+routes/__pycache__/
+services/__pycache__/
+*.py[cod]
+
+# Environment and configuration
+.env
+.venv/
+venv/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Testing/local development
+test_*.py
+.pytest_cache/
+
+# Credentials and secrets
+*.pem
