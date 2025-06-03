@@ -102,10 +102,8 @@ async def get_github_activity_metrics(owner: str, repo: str):
                 "closed_issues_count": 11516,
                 "total_issues_count": 12568,
                 "last_pr_merged_at": "2025-05-27T12:34:56Z",
-                "last_pr_merge_time": {
-                    "days": 3.5,
-                    "human_readable": "3 days, 12 hours"
-                }
+                "last_pr_info": "created 3 days ago",
+                "last_pr_url": "https://github.com/facebook/react/pull/12345"
             }
     """
     try:

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Download, Star, GitFork, Calendar, Package, FileText, AlertCircle } from 'lucide-react';
+import { Download, Star, GitFork, Calendar, Package, FileText, AlertCircle, CheckCircle, Archive, HelpCircle, ExternalLink } from 'lucide-react';
 import MetricRow from './MetricRow';
 import DownloadTrendChart from './DownloadTrendChart';
+import HealthScoreRow from './HealthScoreRow';
+import LastPrSection from './LastPrSection';
 
 export default function CategoryMetrics({ category, data, loading = false, downloadsData = null }) {
   switch (category) {
@@ -16,12 +18,14 @@ export default function CategoryMetrics({ category, data, loading = false, downl
           )}
         </>
       );
-    case 'maintenanceFrequency':
+    case 'releaseManagement':
       return (
         <>
           <MetricRow icon={Calendar} label="Days Since Last Release" value={data.daysSinceLastRelease} loading={loading} />
           <MetricRow icon={Package} label="Releases Last Year" value={data.releasesLastYear} loading={loading} />
-          <MetricRow icon={Calendar} label="Last Code Push" value={data.lastCodePush} loading={loading} />
+          {data.isArchived !== null && (
+            <MetricRow icon={Archive} label="Is Archived" value={data.isArchived} loading={loading} />
+          )}
           <MetricRow icon={Star} label="Maintainers" value={data.maintainersCount} loading={loading} />
         </>
       );
@@ -35,18 +39,25 @@ export default function CategoryMetrics({ category, data, loading = false, downl
     case 'documentationCompleteness':
       return (
         <>
-          <MetricRow icon={FileText} label="Health Score" value={data.healthPercentage} loading={loading} />
-          <MetricRow icon={FileText} label="README" value={data.hasReadme ? '✓' : '✗'} loading={loading} />
-          <MetricRow icon={FileText} label="License" value={data.hasLicense ? '✓' : '✗'} loading={loading} />
-          <MetricRow icon={FileText} label="Contributing Guide" value={data.hasContributing ? '✓' : '✗'} loading={loading} />
-          <MetricRow icon={FileText} label="Code of Conduct" value={data.hasCodeOfConduct ? '✓' : '✗'} loading={loading} />
+          <HealthScoreRow value={data.healthPercentage} loading={loading} />
+          <MetricRow icon={FileText} label="README" value={data.hasReadme} loading={loading} />
+          <MetricRow icon={FileText} label="License" value={data.hasLicense} loading={loading} />
+          <MetricRow icon={FileText} label="Contributing Guide" value={data.hasContributing} loading={loading} />
+          <MetricRow icon={FileText} label="Code of Conduct" value={data.hasCodeOfConduct} loading={loading} />
         </>
       );
-    case 'supportResponsiveness':
+    case 'maintenanceFrequency':
       return (
         <>
-          <MetricRow icon={AlertCircle} label="Open Issues" value={data.openIssues} loading={loading} />
-          <MetricRow icon={Calendar} label="Last PR Merged" value={data.lastPrMerged} loading={loading} />
+          <MetricRow icon={CheckCircle} label="Is Maintained" value={data.isMaintained} loading={loading} />
+          <MetricRow icon={Calendar} label="Last Code Push" value={data.lastCodePush} loading={loading} />
+          <MetricRow icon={AlertCircle} label="Issues" value={data.issuesCombined} loading={loading} />
+          <LastPrSection 
+            created={data.lastPrCreated} 
+            mergedAt={data.lastPrMerged} 
+            url={data.lastPrUrl} 
+            loading={loading} 
+          />
         </>
       );
     default:

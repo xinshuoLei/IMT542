@@ -217,8 +217,6 @@ async def fetch_github_issues_data(owner: str, repo: str) -> Dict[str, Any]:
             }
     except Exception as e:
         raise GitHubAPIError(f"Error fetching GitHub issues data: {str(e)}") from e
-    except Exception as e:
-        raise GitHubAPIError(f"Error fetching GitHub issues data: {str(e)}") from e
 
 async def fetch_github_pr_data(owner: str, repo: str) -> Dict[str, Any]:
     """
@@ -237,8 +235,8 @@ async def fetch_github_pr_data(owner: str, repo: str) -> Dict[str, Any]:
         GitHubAPIError: If there is an error with the GitHub API
         httpx.HTTPStatusError: For other HTTP errors
     """
-    # URL for the most recently merged PR
-    recent_merged_url = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}+is:pr+is:merged&sort=updated&order=desc&per_page=1"
+    # URL for the most recently merged PR - sort by closed date to get truly recent merges
+    recent_merged_url = f"https://api.github.com/search/issues?q=repo:{owner}/{repo}+is:pr+is:merged&sort=closed&order=desc&per_page=1"
     
     headers = {
         "User-Agent": "JavaScript-Package-Health-API",
@@ -283,18 +281,14 @@ async def fetch_github_pr_data(owner: str, repo: str) -> Dict[str, Any]:
                     last_merged_at = merged_at
                     time_diff = format_time_difference(created_date, merged_date)
                     
-                    # Just provide the creation time info
-                    last_pr_info = f"created {time_diff['human_readable']} ago"
+                    # Provide info about how long the PR lived before being merged
+                    last_pr_info = f"{time_diff['human_readable']} before merge"
             
             return {
                 "last_pr_merged_at": last_merged_at,
                 "last_pr_info": last_pr_info,
                 "last_pr_url": last_pr_url
             }
-    except Exception as e:
-        raise GitHubAPIError(f"Error fetching GitHub PR data: {str(e)}") from e
-    except Exception as e:
-        raise GitHubAPIError(f"Error fetching GitHub PR data: {str(e)}") from e
     except Exception as e:
         raise GitHubAPIError(f"Error fetching GitHub PR data: {str(e)}") from e
 
