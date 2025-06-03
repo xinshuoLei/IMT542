@@ -1,0 +1,15 @@
+#package-health-extension-panel * {
+  box-sizing: border-box;
+}
+
+#package-health-extension-panel button {
+  cursor: pointer;
+}
+
+#package-health-extension-panel a {
+  text-decoration: none;
+}
+
+#package-health-extension-panel a:hover {
+  text-decoration: underline;
+}

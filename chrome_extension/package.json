@@ -1,0 +1,30 @@
+{
+  "name": "package-health-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension for JavaScript package health metrics",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "webpack --mode=production && npm run copy-assets",
+    "dev": "webpack --mode=development --watch & npm run copy-assets && npm run watch-assets",
+    "watch-assets": "nodemon --watch manifest.json --watch src/panel.css --watch public --exec \"npm run copy-assets\"",
+    "copy-assets": "cp manifest.json dist/ && cp src/panel.css dist/ && cp -r public/* dist/ 2>/dev/null || true",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-react": "^7.22.0",
+    "babel-loader": "^9.1.0",
+    "concurrently": "^9.1.2",
+    "css-loader": "^6.8.0",
+    "html-webpack-plugin": "^5.5.0",
+    "nodemon": "^3.1.10",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {
+    "lucide-react": "^0.263.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "JavaScript Package Health",
+  "version": "1.0.0",
+  "description": "View health and usability metrics for JavaScript packages",
+  "permissions": ["activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["panel.css"]
+    }
+  ],
+  "action": {
+    "default_title": "Toggle Package Health Panel"
+  },
+  "commands": {
+    "toggle-panel": {
+      "suggested_key": {
+        "default": "Ctrl+H",
+        "mac": "Command+H"
+      },
+      "description": "Toggle Package Health Panel"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "128": "icons/icon128.png"
+  }
+}
