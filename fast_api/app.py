@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
 
-from routes import npm, github
+from routes import npm, github, health
 
 app = FastAPI(
     title="JavaScript Package Health API",
@@ -23,6 +23,7 @@ app.add_middleware(
 # Include routers from route modules
 app.include_router(npm.router, tags=["npm"])
 app.include_router(github.router, tags=["github"])
+app.include_router(health.router, tags=["health"])
 
 @app.get("/")
 async def root():
@@ -38,19 +39,19 @@ async def root():
         "version": "0.1.0",
         "available_endpoints": [
             {
-                "path": "/npm/metadata/{package_name}",
+                "path": "/health?package={package_name}",
+                "description": "Get comprehensive health and usability data for an npm package",
+                "example": "/health?package=react"
+            },
+            {
+                "path": "/npm/metadata?package={package_name}",
                 "description": "Get basic metadata about an npm package",
-                "example": "/npm/metadata/react"
+                "example": "/npm/metadata?package=react"
             },
             {
-                "path": "/npm/downloads/month/{package_name}",
-                "description": "Get monthly download count for an npm package",
-                "example": "/npm/downloads/month/react"
-            },
-            {
-                "path": "/npm/downloads/trend/{package_name}",
-                "description": "Get daily download trends for the last month",
-                "example": "/npm/downloads/trend/react"
+                "path": "/npm/downloads?package={package_name}",
+                "description": "Get download statistics for an npm package",
+                "example": "/npm/downloads?package=react"
             },
             {
                 "path": "/github/repo/{owner}/{repo}",
@@ -61,6 +62,11 @@ async def root():
                 "path": "/github/health/{owner}/{repo}",
                 "description": "Get GitHub community health metrics",
                 "example": "/github/health/facebook/react"
+            },
+            {
+                "path": "/github/activity/{owner}/{repo}",
+                "description": "Get GitHub activity and contribution metrics",
+                "example": "/github/activity/facebook/react"
             }
         ],
         "documentation": "/docs",
