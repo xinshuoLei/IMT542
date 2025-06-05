@@ -2,7 +2,8 @@ const API_BASE_URL = 'http://localhost:8000';
 
 export async function fetchNpmMetadata(packageName) {
   try {
-    const response = await fetch(`${API_BASE_URL}/npm/metadata/${packageName}`);
+    // Use query parameter instead of path parameter for package name
+    const response = await fetch(`${API_BASE_URL}/npm/metadata?package=${encodeURIComponent(packageName)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -15,7 +16,8 @@ export async function fetchNpmMetadata(packageName) {
 
 export async function fetchNpmDownloads(packageName) {
   try {
-    const response = await fetch(`${API_BASE_URL}/npm/downloads/${packageName}`);
+    // Use query parameter instead of path parameter for package name
+    const response = await fetch(`${API_BASE_URL}/npm/downloads?package=${encodeURIComponent(packageName)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

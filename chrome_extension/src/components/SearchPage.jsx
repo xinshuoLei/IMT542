@@ -196,7 +196,7 @@ export default function SearchPage({ selectedText, searchResults, loading, error
                 {/* Keywords */}
                 {pkg.keywords && pkg.keywords.length > 0 && (
                   <div style={{ marginBottom: '12px' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', alignItems: 'center' }}>
                       {pkg.keywords.slice(0, 4).map((keyword, idx) => (
                         <span key={idx} style={{
                           fontSize: '11px',
@@ -210,7 +210,13 @@ export default function SearchPage({ selectedText, searchResults, loading, error
                         </span>
                       ))}
                       {pkg.keywords.length > 4 && (
-                        <span style={{ fontSize: '11px', color: '#6b7280' }}>
+                        <span style={{ 
+                          fontSize: '11px', 
+                          color: '#6b7280',
+                          padding: '2px 4px',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}>
                           +{pkg.keywords.length - 4} more
                         </span>
                       )}
@@ -218,35 +224,12 @@ export default function SearchPage({ selectedText, searchResults, loading, error
                   </div>
                 )}
 
-                {/* Quick Stats Placeholder */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: '#6b7280' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Download size={12} />
-                    <span>Click to analyze</span>
-                  </div>
+                {/* Quick Stats */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: '#6b7280', marginTop: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Calendar size={12} />
-                    <span>Updated {formatDate(pkg.date)}</span>
+                    <span>Last publish {formatDate(pkg.date)}</span>
                   </div>
-                </div>
-
-                {/* Select Button */}
-                <div style={{ marginTop: '12px', textAlign: 'right' }}>
-                  <button style={{
-                    backgroundColor: '#3b82f6',
-                    color: 'white',
-                    border: 'none',
-                    padding: '6px 12px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    fontWeight: '500',
-                    cursor: 'pointer'
-                  }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = '#2563eb'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = '#3b82f6'}
-                  >
-                    Analyze Package
-                  </button>
                 </div>
               </div>
             ))}
