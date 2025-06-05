@@ -1,28 +1,9 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
 
-export default function PackageHeader({ selectedText, loading, error, packageData, onClose }) {
+export default function PackageHeader({ loading, error, packageData, onClose }) {
   return (
-    <div style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', padding: '16px' }}>
-      {/* Selected Text Display */}
-      {selectedText && (
-        <div style={{ 
-          backgroundColor: '#f0f9ff', 
-          border: '1px solid #0ea5e9', 
-          borderRadius: '6px', 
-          padding: '8px 12px', 
-          marginBottom: '12px',
-          fontSize: '14px'
-        }}>
-          <div style={{ fontSize: '12px', fontWeight: '500', color: '#0369a1', marginBottom: '4px' }}>
-            Selected Text:
-          </div>
-          <div style={{ color: '#0c4a6e', fontFamily: 'monospace', wordBreak: 'break-word' }}>
-            "{selectedText}"
-          </div>
-        </div>
-      )}
-      
+    <div>
       {/* Loading State */}
       {loading && (
         <div style={{ textAlign: 'center', padding: '20px' }}>
@@ -64,21 +45,6 @@ export default function PackageHeader({ selectedText, loading, error, packageDat
               </p>
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                onClick={onClose}
-                style={{
-                  padding: '4px',
-                  border: 'none',
-                  backgroundColor: 'transparent',
-                  color: '#9ca3af',
-                  cursor: 'pointer',
-                  borderRadius: '4px'
-                }}
-                title="Close panel"
-                onMouseEnter={(e) => { e.target.style.color = '#6b7280'; e.target.style.backgroundColor = '#f3f4f6'; }}
-                onMouseLeave={(e) => { e.target.style.color = '#9ca3af'; e.target.style.backgroundColor = 'transparent'; }}>
-                ✕
-              </button>
               <a href={packageData.npm_url} target="_blank" rel="noopener noreferrer" 
                  style={{ 
                    padding: '4px', 

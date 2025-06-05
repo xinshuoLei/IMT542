@@ -65,6 +65,31 @@ export async function fetchGitHubActivity(owner, repo) {
   }
 }
 
+// NEW: npm search function - calls npm API directly
+export async function searchNpmPackages(query, size = 10) {
+  try {
+    const response = await fetch(
+      `https://registry.npmjs.org/-/v1/search?text=${encodeURIComponent(query)}&size=${size}`
+    );
+    if (!response.ok) {
+      throw new Error(`Search failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.objects.map(obj => ({
+      name: obj.package.name,
+      description: obj.package.description,
+      version: obj.package.version,
+      keywords: obj.package.keywords || [],
+      date: obj.package.date,
+      publisher: obj.package.publisher?.username || 'Unknown',
+      maintainers: obj.package.maintainers || []
+    }));
+  } catch (error) {
+    console.error('npm search error:', error);
+    throw error;
+  }
+}
+
 // Utility function to extract GitHub owner and repo from repository URL
 export function extractGitHubInfo(repositoryUrl) {
   if (!repositoryUrl) return null;

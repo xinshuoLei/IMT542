@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PackageHeader from './PackageHeader';
 import CategoryPanel from './CategoryPanel';
-import { fetchNpmMetadata, fetchNpmDownloads, fetchGitHubRepo, fetchGitHubHealth, fetchGitHubActivity, extractGitHubInfo } from '../utils/api';
+import SearchPage from './SearchPage';
+import { fetchNpmMetadata, fetchNpmDownloads, fetchGitHubRepo, fetchGitHubHealth, fetchGitHubActivity, extractGitHubInfo, searchNpmPackages } from '../utils/api';
 
 // Define categories and package name directly in this file
 const PACKAGE_NAME = 'echarts';
@@ -21,52 +22,110 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
   const [githubData, setGithubData] = useState(null);
   const [githubHealthData, setGithubHealthData] = useState(null);
   const [githubActivityData, setGithubActivityData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Search-related state
+  const [showSearchPage, setShowSearchPage] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
-  // Fetch package data on component mount
+  // Trigger search when selectedText changes
   useEffect(() => {
-    async function loadPackageData() {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Fetch npm data first
-        const [npmData, downloadStats] = await Promise.all([
-          fetchNpmMetadata(PACKAGE_NAME),
-          fetchNpmDownloads(PACKAGE_NAME)
-        ]);
-        
-        setPackageData(npmData);
-        setDownloadsData(downloadStats);
+    async function performSearch() {
+      if (!selectedText || selectedText.trim().length < 2) {
+        setSearchResults([]);
+        setShowSearchPage(false);
+        return;
+      }
 
-        // Extract GitHub info and fetch GitHub data if available
-        const githubInfo = extractGitHubInfo(npmData.repository);
-        if (githubInfo) {
-          try {
-            const [repoData, healthData, activityData] = await Promise.all([
-              fetchGitHubRepo(githubInfo.owner, githubInfo.repo),
-              fetchGitHubHealth(githubInfo.owner, githubInfo.repo),
-              fetchGitHubActivity(githubInfo.owner, githubInfo.repo)
-            ]);
-            setGithubData(repoData);
-            setGithubHealthData(healthData);
-            setGithubActivityData(activityData);
-          } catch (githubError) {
-            console.error('Failed to load GitHub data:', githubError);
-            // Continue without GitHub data
-          }
-        }
+      try {
+        setSearchLoading(true);
+        setSearchError(null);
+        setShowSearchPage(true);
         
+        const results = await searchNpmPackages(selectedText.trim(), 10);
+        setSearchResults(results);
       } catch (err) {
-        setError(err.message);
-        console.error('Failed to load package data:', err);
+        setSearchError(err.message);
+        setSearchResults([]);
       } finally {
-        setLoading(false);
+        setSearchLoading(false);
       }
     }
 
-    loadPackageData();
+    performSearch();
+  }, [selectedText]);
+
+  // Handle package selection from search results
+  const handleSelectPackage = async (pkg) => {
+    setSelectedPackage(pkg);
+    setShowSearchPage(false);
+    
+    // Load package data (still using hardcoded echarts for now)
+    await loadPackageData();
+  };
+
+  // Fetch package data 
+  async function loadPackageData() {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch npm data first (still hardcoded to echarts)
+      const [npmData, downloadStats] = await Promise.all([
+        fetchNpmMetadata(PACKAGE_NAME),
+        fetchNpmDownloads(PACKAGE_NAME)
+      ]);
+      
+      setPackageData(npmData);
+      setDownloadsData(downloadStats);
+
+      // Extract GitHub info and fetch GitHub data if available
+      const githubInfo = extractGitHubInfo(npmData.repository);
+      if (githubInfo) {
+        try {
+          const [repoData, healthData, activityData] = await Promise.all([
+            fetchGitHubRepo(githubInfo.owner, githubInfo.repo),
+            fetchGitHubHealth(githubInfo.owner, githubInfo.repo),
+            fetchGitHubActivity(githubInfo.owner, githubInfo.repo)
+          ]);
+          setGithubData(repoData);
+          setGithubHealthData(healthData);
+          setGithubActivityData(activityData);
+        } catch (githubError) {
+          console.error('Failed to load GitHub data:', githubError);
+          // Continue without GitHub data
+        }
+      }
+      
+    } catch (err) {
+      setError(err.message);
+      console.error('Failed to load package data:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Function to go back to search
+  const handleBackToSearch = () => {
+    setShowSearchPage(true);
+    setSelectedPackage(null);
+    setPackageData(null);
+    setDownloadsData(null);
+    setGithubData(null);
+    setGithubHealthData(null);
+    setGithubActivityData(null);
+  };
+
+  // Fetch package data on component mount
+  useEffect(() => {
+    // Only load package data if no selected text (fallback mode)
+    if (!selectedText) {
+      loadPackageData();
+    }
   }, []);
 
   const toggleCategory = (category) => {
@@ -392,47 +451,120 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
       display: 'flex', 
       flexDirection: 'column' 
     }}>
-      {/* Header */}
-      <PackageHeader 
-        selectedText={selectedText}
-        loading={loading}
-        error={error}
-        packageData={packageData}
-        onClose={onClose}
-      />
+      
+      {/* Show Search Page or Analysis Page */}
+      {showSearchPage ? (
+        <SearchPage
+          selectedText={selectedText}
+          searchResults={searchResults}
+          loading={searchLoading}
+          error={searchError}
+          onSelectPackage={handleSelectPackage}
+          onClose={onClose}
+        />
+      ) : (
+        <>
+          {/* Header with back button */}
+          <div style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', padding: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <button
+                onClick={handleBackToSearch}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  backgroundColor: '#f3f4f6',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  color: '#374151',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#e5e7eb'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+              >
+                ← Back to Search
+              </button>
+              <button
+                onClick={onClose}
+                style={{
+                  padding: '4px',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  color: '#9ca3af',
+                  cursor: 'pointer',
+                  borderRadius: '4px'
+                }}
+                title="Close panel"
+                onMouseEnter={(e) => { e.target.style.color = '#6b7280'; e.target.style.backgroundColor = '#f3f4f6'; }}
+                onMouseLeave={(e) => { e.target.style.color = '#9ca3af'; e.target.style.backgroundColor = 'transparent'; }}>
+                ✕
+              </button>
+            </div>
 
-      {/* Categories */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {categories.map(({ key, title }) => {
-            const categoryData = getCategoriesData()[key];
-            if (!categoryData) {
-              console.error(`Missing category data for key: ${key}`);
-              return null;
-            }
-            return (
-              <CategoryPanel
-                key={key}
-                title={title}
-                category={key}
-                rating={categoryData.rating}
-                data={categoryData.data}
-                expanded={expandedCategories[key]}
-                onToggle={() => toggleCategory(key)}
-                loading={loading}
-                downloadsData={key === 'communityAdoption' ? downloadsData : null}
-              />
-            );
-          })}
-        </div>
-      </div>
+            {/* Selected Package Info */}
+            {selectedPackage && (
+              <div style={{ 
+                backgroundColor: '#ecfdf5', 
+                border: '1px solid #10b981', 
+                borderRadius: '6px', 
+                padding: '8px 12px', 
+                marginBottom: '12px',
+                fontSize: '14px'
+              }}>
+                <div style={{ fontSize: '12px', fontWeight: '500', color: '#047857', marginBottom: '4px' }}>
+                  Selected Package:
+                </div>
+                <div style={{ color: '#065f46', fontFamily: 'monospace', fontWeight: '600' }}>
+                  {selectedPackage.name}
+                </div>
+              </div>
+            )}
 
-      {/* Footer */}
-      <div style={{ backgroundColor: 'white', borderTop: '1px solid #e5e7eb', padding: '12px' }}>
-        <p style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', margin: 0 }}>
-          Package Health Extension
-        </p>
-      </div>
+            {/* Package Analysis Header */}
+            <PackageHeader 
+              loading={loading}
+              error={error}
+              packageData={packageData}
+              onClose={() => {}}
+            />
+          </div>
+
+          {/* Categories */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {categories.map(({ key, title }) => {
+                const categoryData = getCategoriesData()[key];
+                if (!categoryData) {
+                  console.error(`Missing category data for key: ${key}`);
+                  return null;
+                }
+                return (
+                  <CategoryPanel
+                    key={key}
+                    title={title}
+                    category={key}
+                    rating={categoryData.rating}
+                    data={categoryData.data}
+                    expanded={expandedCategories[key]}
+                    onToggle={() => toggleCategory(key)}
+                    loading={loading}
+                    downloadsData={key === 'communityAdoption' ? downloadsData : null}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div style={{ backgroundColor: 'white', borderTop: '1px solid #e5e7eb', padding: '12px' }}>
+            <p style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', margin: 0 }}>
+              Package Health Extension - Analyzing: {PACKAGE_NAME}
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 }
