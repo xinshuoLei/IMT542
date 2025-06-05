@@ -27,7 +27,12 @@ export default function RatingBadge({ rating, loading = false }) {
     Infrequent: { backgroundColor: '#fecaca', color: '#991b1b' },
     Sparse: { backgroundColor: '#fecaca', color: '#991b1b' },
     Backlogged: { backgroundColor: '#fecaca', color: '#991b1b' },
-    Heavy: { backgroundColor: '#fecaca', color: '#991b1b' }
+    Heavy: { backgroundColor: '#fecaca', color: '#991b1b' },
+    
+    // NEUTRAL states - Gray
+    Loading: { backgroundColor: '#f3f4f6', color: '#6b7280' },
+    Unavailable: { backgroundColor: '#f3f4f6', color: '#6b7280' },
+    Error: { backgroundColor: '#fef3c7', color: '#92400e' }
   };
 
   const style = colors[rating] || { backgroundColor: '#f3f4f6', color: '#374151' };

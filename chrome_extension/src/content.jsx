@@ -12,14 +12,8 @@ function getSelectedText() {
 }
 
 function createPanel(selectedText = '') {
-  if (panelContainer) {
-    // Update existing panel with new selected text
-    if (root && selectedText) {
-      root.render(<PackageHealthPanel onClose={hidePanel} selectedText={selectedText} />);
-    }
-    return;
-  }
-
+  // Always create a fresh panel - this function should only be called when panelContainer is null
+  
   // Create container for the floating panel
   panelContainer = document.createElement('div');
   panelContainer.id = 'package-health-extension-panel';
@@ -45,15 +39,13 @@ function createPanel(selectedText = '') {
 }
 
 function showPanel(selectedText = '') {
-  if (!panelContainer) {
-    createPanel(selectedText);
-  } else if (selectedText && root) {
-    // Update with new selected text
-    root.render(<PackageHealthPanel onClose={hidePanel} selectedText={selectedText} />);
-  }
+  // Always create a fresh panel when showing
+  createPanel(selectedText);
   
   requestAnimationFrame(() => {
-    panelContainer.style.transform = 'translateX(0)';
+    if (panelContainer) {
+      panelContainer.style.transform = 'translateX(0)';
+    }
   });
   isVisible = true;
 }
@@ -63,6 +55,14 @@ function hidePanel() {
     panelContainer.style.transform = 'translateX(100%)';
   }
   isVisible = false;
+  
+  // Reset the React component completely by unmounting it
+  if (root && panelContainer) {
+    root.unmount();
+    root = null;
+    document.body.removeChild(panelContainer);
+    panelContainer = null;
+  }
 }
 
 function togglePanel() {

@@ -84,17 +84,30 @@ export default function PackageHeader({ loading, error, packageData, onClose }) 
                   </a>
                 </div>
               )}
-              {packageData.repository && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#6b7280' }}>Repository:</span>
+              {/* Repository - Always show this row */}
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: '#6b7280' }}>Repository:</span>
+                {packageData.repository ? (
                   <a href={packageData.repository} target="_blank" rel="noopener noreferrer"
                      style={{ color: '#2563eb', textDecoration: 'none', marginLeft: '8px', maxWidth: '12rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
                      onMouseEnter={(e) => e.target.style.color = '#1d4ed8'}
                      onMouseLeave={(e) => e.target.style.color = '#2563eb'}>
                     {packageData.repository.replace('https://github.com/', '')}
                   </a>
-                </div>
-              )}
+                ) : (
+                  <span style={{ 
+                    color: '#dc2626', 
+                    fontSize: '12px', 
+                    fontWeight: '500',
+                    backgroundColor: '#fef2f2',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    border: '1px solid #fecaca'
+                  }}>
+                    No repository information
+                  </span>
+                )}
+              </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: '#6b7280' }}>npm URL:</span>
                 <a href={packageData.npm_url} target="_blank" rel="noopener noreferrer"

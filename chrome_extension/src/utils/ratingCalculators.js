@@ -1,5 +1,8 @@
 // Calculate adoption rating based on downloads and GitHub metrics
-export function calculateAdoptionRating(downloadData, githubData) {
+export function calculateAdoptionRating(downloadData, githubData, loading = false, error = null) {
+  if (loading) return 'Loading';
+  if (error) return 'Error';
+  
   const monthly = downloadData?.monthly_downloads || 0;
   const stars = githubData?.stars || 0;
   
@@ -89,13 +92,15 @@ export function calculateReleaseManagementRating(npmData, githubData) {
 }
 
 // Calculate maintenance frequency rating based on GitHub activity
-export function calculateMaintenanceFrequencyRating(githubData, activityData) {
-  if (!githubData && !activityData) return 'Infrequent';
+export function calculateMaintenanceFrequencyRating(githubData, githubActivityData, loading = false, error = null) {
+  if (loading) return 'Loading';
+  if (error) return 'Error';
+  if (!githubData && !githubActivityData) return 'Unavailable';
   
   const isMaintained = githubData?.is_maintained;
   const isArchived = githubData?.is_archived;
   const lastCodePush = githubData?.last_code_push;
-  const lastPrMergedAt = activityData?.last_pr_merged_at;
+  const lastPrMergedAt = githubActivityData?.last_pr_merged_at;
   
   // If archived, definitely infrequent
   if (isArchived) return 'Infrequent';
@@ -138,8 +143,10 @@ export function calculateMaintenanceFrequencyRating(githubData, activityData) {
 }
 
 // Calculate documentation rating based on GitHub health data
-export function calculateDocumentationRating(healthData) {
-  if (!healthData) return 'Sparse';
+export function calculateDocumentationRating(healthData, loading = false, error = null) {
+  if (loading) return 'Loading';
+  if (error) return 'Error';
+  if (!healthData) return 'Unavailable';
   
   const healthPercentage = healthData.health_percentage || 0;
   const hasBasicFiles = healthData.has_readme && healthData.has_license;

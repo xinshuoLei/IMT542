@@ -42,16 +42,36 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     error: searchError
   } = usePackageSearch(selectedText);
 
-  // Show search page when there are search results or we're searching (but not if user has selected a package)
+  // Reset all state when component mounts (panel opens)
+  useEffect(() => {
+    // Reset analysis state
+    setExpandedCategories({});
+    setSelectedPackage(null);
+    setHasSelectedPackage(false);
+    clearPackageData();
+    
+    // Determine initial view
+    const shouldShowSearch = selectedText && selectedText.trim().length >= 2;
+    setShowSearchPage(shouldShowSearch);
+    
+    if (!shouldShowSearch && !selectedText) {
+      // Fallback mode - load default package
+      loadPackageData(FALLBACK_PACKAGE_NAME);
+    }
+  }, []); // Empty dependency array means this runs only when component mounts
+
+  // Handle selectedText changes (but not on initial mount)
   useEffect(() => {
     const shouldShowSearch = selectedText && selectedText.trim().length >= 2 && !hasSelectedPackage;
     setShowSearchPage(shouldShowSearch);
     
-    if (!shouldShowSearch && !selectedText && !hasSelectedPackage) {
-      // Fallback mode - load default package
-      loadPackageData(FALLBACK_PACKAGE_NAME);
+    // Only clear data if we're switching to search mode
+    if (shouldShowSearch && hasSelectedPackage) {
+      setSelectedPackage(null);
+      setHasSelectedPackage(false);
+      clearPackageData();
     }
-  }, [selectedText, hasSelectedPackage, loadPackageData]);
+  }, [selectedText, hasSelectedPackage, clearPackageData]);
 
   // Handle package selection from search results
   const handleSelectPackage = async (pkg) => {
@@ -84,7 +104,9 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     downloadsData,
     githubData,
     githubHealthData,
-    githubActivityData
+    githubActivityData,
+    loading,
+    error
   );
 
   return (

@@ -14,10 +14,10 @@ import {
 } from './formatters';
 
 // Create categories with real data where available
-export function getCategoriesData(packageData, downloadsData, githubData, githubHealthData, githubActivityData) {
+export function getCategoriesData(packageData, downloadsData, githubData, githubHealthData, githubActivityData, loading = false, error = null) {
   return {
     communityAdoption: {
-      rating: calculateAdoptionRating(downloadsData, githubData),
+      rating: calculateAdoptionRating(downloadsData, githubData, loading, error),
       data: {
         monthlyDownloads: formatDownloads(downloadsData?.monthly_downloads),
         stars: formatNumber(githubData?.stars) || 'N/A',
@@ -25,7 +25,7 @@ export function getCategoriesData(packageData, downloadsData, githubData, github
       }
     },
     releaseManagement: {
-      rating: calculateReleaseManagementRating(packageData, githubData),
+      rating: calculateReleaseManagementRating(packageData, githubData, loading, error),
       data: {
         daysSinceLastRelease: packageData?.days_since_last_release?.toString() || 'N/A',
         releasesLastYear: packageData?.releases_last_year?.toString() || 'N/A',
@@ -36,14 +36,14 @@ export function getCategoriesData(packageData, downloadsData, githubData, github
       }
     },
     implementationFootprint: {
-      rating: calculateFootprintRating(packageData),
+      rating: calculateFootprintRating(packageData, loading, error),
       data: {
         bundleSize: packageData?.bundle_size || 'N/A',
         dependenciesCount: packageData?.dependencies_count?.toString() || 'N/A'
       }
     },
     documentationCompleteness: {
-      rating: calculateDocumentationRating(githubHealthData),
+      rating: calculateDocumentationRating(githubHealthData, loading, error),
       data: {
         healthPercentage: githubHealthData?.health_percentage 
           ? `${githubHealthData.health_percentage}%` 
@@ -63,7 +63,7 @@ export function getCategoriesData(packageData, downloadsData, githubData, github
       }
     },
     maintenanceFrequency: {
-      rating: calculateMaintenanceFrequencyRating(githubData, githubActivityData),
+      rating: calculateMaintenanceFrequencyRating(githubData, githubActivityData, loading, error),
       data: {
         isMaintained: githubData?.is_maintained !== undefined 
           ? (githubData.is_maintained ? '✓' : '✗') 
