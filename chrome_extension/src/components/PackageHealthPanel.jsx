@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PackageHeader from './PackageHeader';
 import CategoryPanel from './CategoryPanel';
 import SearchPage from './SearchPage';
+import ManualSearchPage from './ManualSearchPage';
 import { usePackageData } from '../hooks/usePackageData';
 import { usePackageSearch } from '../hooks/usePackageSearch';
 import { getCategoriesData } from '../utils/dataProcessors';
@@ -20,8 +21,10 @@ const categories = [
 export default function PackageHealthPanel({ onClose, selectedText = '' }) {
   const [expandedCategories, setExpandedCategories] = useState({});
   const [showSearchPage, setShowSearchPage] = useState(true);
+  const [showManualSearch, setShowManualSearch] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasSelectedPackage, setHasSelectedPackage] = useState(false);
+  const [currentSearchQuery, setCurrentSearchQuery] = useState(selectedText); // Track current search context
 
   // Custom hooks
   const {
@@ -40,7 +43,7 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     searchResults,
     loading: searchLoading,
     error: searchError
-  } = usePackageSearch(selectedText);
+  } = usePackageSearch(currentSearchQuery); // Use currentSearchQuery instead of selectedText
 
   // Reset all state when component mounts (panel opens)
   useEffect(() => {
@@ -48,28 +51,31 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     setExpandedCategories({});
     setSelectedPackage(null);
     setHasSelectedPackage(false);
+    setCurrentSearchQuery(selectedText); // Initialize with selectedText
     clearPackageData();
     
-    // Determine initial view
-    const shouldShowSearch = selectedText && selectedText.trim().length >= 2;
-    setShowSearchPage(shouldShowSearch);
-    
-    if (!shouldShowSearch && !selectedText) {
-      // Fallback mode - load default package
-      loadPackageData(FALLBACK_PACKAGE_NAME);
+    // Determine initial view based on selectedText
+    if (selectedText && selectedText.trim().length >= 2) {
+      // User highlighted text - show search results
+      setShowSearchPage(true);
+      setShowManualSearch(false);
+    } else {
+      // No highlighted text - always show manual search (reset from any previous state)
+      setShowSearchPage(false);
+      setShowManualSearch(true);
     }
   }, []); // Empty dependency array means this runs only when component mounts
 
-  // Handle selectedText changes (but not on initial mount)
+  // Also reset to manual search if selectedText becomes empty after mount
   useEffect(() => {
-    const shouldShowSearch = selectedText && selectedText.trim().length >= 2 && !hasSelectedPackage;
-    setShowSearchPage(shouldShowSearch);
-    
-    // Only clear data if we're switching to search mode
-    if (shouldShowSearch && hasSelectedPackage) {
-      setSelectedPackage(null);
-      setHasSelectedPackage(false);
-      clearPackageData();
+    if (!selectedText || selectedText.trim().length < 2) {
+      // If there's no selected text, always go back to manual search
+      if (!hasSelectedPackage) {
+        setShowSearchPage(false);
+        setShowManualSearch(true);
+        setSelectedPackage(null);
+        clearPackageData();
+      }
     }
   }, [selectedText, hasSelectedPackage, clearPackageData]);
 
@@ -78,6 +84,7 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     setSelectedPackage(pkg);
     setHasSelectedPackage(true);
     setShowSearchPage(false);
+    setShowManualSearch(false);
     
     // Use the selected package name for analysis!
     await loadPackageData(pkg.name);
@@ -85,9 +92,27 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
 
   // Function to go back to search
   const handleBackToSearch = () => {
-    setShowSearchPage(true);
+    if (currentSearchQuery && currentSearchQuery.trim().length >= 2) {
+      // If we have a current search query, go back to search results
+      setShowSearchPage(true);
+      setShowManualSearch(false);
+    } else {
+      // If no search query, go back to manual search
+      setShowSearchPage(false);
+      setShowManualSearch(true);
+    }
     setSelectedPackage(null);
     setHasSelectedPackage(false);
+    clearPackageData();
+  };
+
+  // NEW: Function to go to manual search (clear everything) - JUST THE FUNCTION, NO UI YET
+  const handleNewSearch = () => {
+    setShowSearchPage(false);
+    setShowManualSearch(true);
+    setSelectedPackage(null);
+    setHasSelectedPackage(false);
+    setCurrentSearchQuery(''); // Clear the search query
     clearPackageData();
   };
 
@@ -118,15 +143,22 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
       flexDirection: 'column' 
     }}>
       
-      {/* Show Search Page or Analysis Page */}
-      {showSearchPage ? (
+      {/* Show Manual Search, Search Page, or Analysis Page */}
+      {showManualSearch ? (
+        <ManualSearchPage
+          onSelectPackage={handleSelectPackage}
+          onClose={onClose}
+          onSearchPerformed={(query) => setCurrentSearchQuery(query)}
+        />
+      ) : showSearchPage ? (
         <SearchPage
-          selectedText={selectedText}
+          selectedText={currentSearchQuery}
           searchResults={searchResults}
           loading={searchLoading}
           error={searchError}
           onSelectPackage={handleSelectPackage}
           onClose={onClose}
+          onNewSearch={handleNewSearch}
         />
       ) : (
         <>

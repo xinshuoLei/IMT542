@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, Package, Download, Calendar, ExternalLink } from 'lucide-react';
 
-export default function SearchPage({ selectedText, searchResults, loading, error, onSelectPackage, onClose }) {
+export default function SearchPage({ selectedText, searchResults, loading, error, onSelectPackage, onClose, isManualSearch = false, onBackToManualSearch, onNewSearch }) {
   
   const formatNumber = (num) => {
     if (!num) return 'N/A';
@@ -42,37 +42,84 @@ export default function SearchPage({ selectedText, searchResults, loading, error
             <Search size={20} />
             Package Search
           </h2>
-          <button
-            onClick={onClose}
-            style={{
-              padding: '4px',
-              border: 'none',
-              backgroundColor: 'transparent',
-              color: '#9ca3af',
-              cursor: 'pointer',
-              borderRadius: '4px'
-            }}
-            title="Close panel"
-            onMouseEnter={(e) => { e.target.style.color = '#6b7280'; e.target.style.backgroundColor = '#f3f4f6'; }}
-            onMouseLeave={(e) => { e.target.style.color = '#9ca3af'; e.target.style.backgroundColor = 'transparent'; }}>
-            ✕
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* New Search Button */}
+            {onNewSearch && (
+              <button
+                onClick={onNewSearch}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#f3f4f6',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  color: '#374151',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#e5e7eb'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+                title="Start a new search"
+              >
+                <Search size={12} />
+                New Search
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              style={{
+                padding: '4px',
+                border: 'none',
+                backgroundColor: 'transparent',
+                color: '#9ca3af',
+                cursor: 'pointer',
+                borderRadius: '4px'
+              }}
+              title="Close panel"
+              onMouseEnter={(e) => { e.target.style.color = '#6b7280'; e.target.style.backgroundColor = '#f3f4f6'; }}
+              onMouseLeave={(e) => { e.target.style.color = '#9ca3af'; e.target.style.backgroundColor = 'transparent'; }}>
+              ✕
+            </button>
+          </div>
         </div>
 
         {/* Selected Text Display */}
         {selectedText && (
           <div style={{ 
-            backgroundColor: '#f0f9ff', 
-            border: '1px solid #0ea5e9', 
+            backgroundColor: isManualSearch ? '#f0fdf4' : '#f0f9ff', 
+            border: `1px solid ${isManualSearch ? '#10b981' : '#0ea5e9'}`, 
             borderRadius: '6px', 
             padding: '8px 12px', 
             fontSize: '14px'
           }}>
-            <div style={{ fontSize: '12px', fontWeight: '500', color: '#0369a1', marginBottom: '4px' }}>
-              Searching for:
+            <div style={{ fontSize: '12px', fontWeight: '500', color: isManualSearch ? '#047857' : '#0369a1', marginBottom: '4px' }}>
+              {isManualSearch ? 'Searching for:' : 'Searching for:'}
             </div>
-            <div style={{ color: '#0c4a6e', fontFamily: 'monospace', wordBreak: 'break-word' }}>
-              "{selectedText}"
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ color: isManualSearch ? '#065f46' : '#0c4a6e', fontFamily: 'monospace', wordBreak: 'break-word' }}>
+                "{selectedText}"
+              </div>
+              {isManualSearch && onBackToManualSearch && (
+                <button
+                  onClick={onBackToManualSearch}
+                  style={{
+                    padding: '4px 8px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid #10b981',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    color: '#047857',
+                    cursor: 'pointer',
+                    marginLeft: '8px'
+                  }}
+                  onMouseEnter={(e) => { e.target.style.backgroundColor = '#ecfdf5'; }}
+                  onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
+                >
+                  ← New Search
+                </button>
+              )}
             </div>
           </div>
         )}
