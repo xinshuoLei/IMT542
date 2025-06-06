@@ -34,14 +34,18 @@ async def root():
         dict: Information about the API and its available endpoints.
     """
     return {
-        "message": "Welcome to the JavaScript Package Health API",
+        "message": "Welcome to the JavaScript Package Health & Usability API",
         "description": "This API aggregates health and usability signals for JavaScript packages from npm, GitHub, and other sources.",
-        "version": "0.1.0",
         "available_endpoints": [
             {
-                "path": "/health?package={package_name}",
+                "path": "/health/?package={package_name}",
                 "description": "Get comprehensive health and usability data for an npm package",
                 "example": "/health?package=react"
+            },
+            {
+                "path": "/health/rating-criteria",
+                "description": "Get rating criteria and thresholds used for calculating package health ratings",
+                "example": "/health/rating-criteria"
             },
             {
                 "path": "/npm/metadata?package={package_name}",
@@ -69,8 +73,6 @@ async def root():
                 "example": "/github/activity/facebook/react"
             }
         ],
-        "documentation": "/docs",
-        "openapi_schema": "/openapi.json"
     }
 
 if __name__ == "__main__":
