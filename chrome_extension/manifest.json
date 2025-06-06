@@ -3,7 +3,7 @@
   "name": "JavaScript Package Health",
   "version": "1.0.0",
   "description": "View health and usability metrics for JavaScript packages",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "background": {
     "service_worker": "background.js"
   },
@@ -17,6 +17,7 @@
   "action": {
     "default_title": "Toggle Package Health Panel"
   },
+  "options_page": "options.html",
   "commands": {
     "toggle-panel": {
       "suggested_key": {

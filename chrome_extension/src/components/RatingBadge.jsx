@@ -3,7 +3,19 @@ import React from 'react';
 export default function RatingBadge({ rating, loading = false }) {
   if (loading) {
     return (
-      <div style={{ padding: '4px 8px', borderRadius: '4px', fontSize: '12px', backgroundColor: '#f3f4f6', color: '#6b7280' }}>
+      <div style={{ 
+        padding: '5px 8px', // Increased vertical padding
+        borderRadius: '4px', 
+        fontSize: '12px',
+        backgroundColor: '#f3f4f6', 
+        color: '#6b7280',
+        whiteSpace: 'nowrap',
+        display: 'inline-flex', // Changed to inline-flex
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '24px', // Increased height to accommodate padding
+        lineHeight: '1' // Reset line height
+      }}>
         Loading...
       </div>
     );
@@ -39,10 +51,16 @@ export default function RatingBadge({ rating, loading = false }) {
 
   return (
     <div style={{ 
-      padding: '4px 8px', 
+      padding: '5px 8px', // Increased vertical padding
       borderRadius: '4px', 
       fontSize: '12px', 
       fontWeight: '500',
+      whiteSpace: 'nowrap',
+      display: 'inline-flex', // Changed to inline-flex
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '24px', // Increased height to accommodate padding
+      lineHeight: '1', // Reset line height
       ...style 
     }}>
       {rating}

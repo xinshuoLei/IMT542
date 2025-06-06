@@ -1,3 +1,5 @@
+/* chrome_extension/src/panel.css - Add these responsive fixes */
+
 #package-health-extension-panel * {
   box-sizing: border-box;
 }
@@ -12,4 +14,25 @@
 
 #package-health-extension-panel a:hover {
   text-decoration: underline;
+}
+
+/* Add responsive fixes */
+#package-health-extension-panel {
+  min-width: 350px !important; /* Ensure minimum width */
+  max-width: 450px !important; /* Ensure maximum width */
+  width: 28rem !important; /* Maintain preferred width */
+}
+
+/* Ensure text doesn't overflow */
+#package-health-extension-panel * {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fix for small screens */
+@media (max-width: 500px) {
+  #package-health-extension-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
 }

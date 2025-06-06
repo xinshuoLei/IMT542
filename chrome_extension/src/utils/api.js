@@ -1,9 +1,19 @@
-const API_BASE_URL = 'http://localhost:8000';
+const DEFAULT_API_URL = 'http://localhost:8000';
+
+async function getApiUrl() {
+  try {
+    const result = await chrome.storage.sync.get(['apiUrl']);
+    return result.apiUrl || DEFAULT_API_URL;
+  } catch (error) {
+    console.error('Error getting API URL from storage:', error);
+    return DEFAULT_API_URL;
+  }
+}
 
 export async function fetchNpmMetadata(packageName) {
   try {
-    // Use query parameter instead of path parameter for package name
-    const response = await fetch(`${API_BASE_URL}/npm/metadata?package=${encodeURIComponent(packageName)}`);
+    const apiUrl = await getApiUrl();
+    const response = await fetch(`${apiUrl}/npm/metadata?package=${encodeURIComponent(packageName)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -16,8 +26,8 @@ export async function fetchNpmMetadata(packageName) {
 
 export async function fetchNpmDownloads(packageName) {
   try {
-    // Use query parameter instead of path parameter for package name
-    const response = await fetch(`${API_BASE_URL}/npm/downloads?package=${encodeURIComponent(packageName)}`);
+    const apiUrl = await getApiUrl();
+    const response = await fetch(`${apiUrl}/npm/downloads?package=${encodeURIComponent(packageName)}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -30,7 +40,8 @@ export async function fetchNpmDownloads(packageName) {
 
 export async function fetchGitHubRepo(owner, repo) {
   try {
-    const response = await fetch(`${API_BASE_URL}/github/repo/${owner}/${repo}`);
+    const apiUrl = await getApiUrl();
+    const response = await fetch(`${apiUrl}/github/repo/${owner}/${repo}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -43,7 +54,8 @@ export async function fetchGitHubRepo(owner, repo) {
 
 export async function fetchGitHubHealth(owner, repo) {
   try {
-    const response = await fetch(`${API_BASE_URL}/github/health/${owner}/${repo}`);
+    const apiUrl = await getApiUrl();
+    const response = await fetch(`${apiUrl}/github/health/${owner}/${repo}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -56,7 +68,8 @@ export async function fetchGitHubHealth(owner, repo) {
 
 export async function fetchGitHubActivity(owner, repo) {
   try {
-    const response = await fetch(`${API_BASE_URL}/github/activity/${owner}/${repo}`);
+    const apiUrl = await getApiUrl();
+    const response = await fetch(`${apiUrl}/github/activity/${owner}/${repo}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -67,7 +80,7 @@ export async function fetchGitHubActivity(owner, repo) {
   }
 }
 
-// NEW: npm search function - calls npm API directly
+// NEW: npm search function - calls npm API directly (no need to change this one)
 export async function searchNpmPackages(query, size = 10) {
   try {
     const response = await fetch(

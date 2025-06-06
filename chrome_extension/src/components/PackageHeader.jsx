@@ -69,15 +69,23 @@ export default function PackageHeader({ loading, error, packageData, onClose }) 
               Basic Information
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', fontSize: '14px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#6b7280' }}>License:</span>
-                <span style={{ fontWeight: '500' }}>{packageData.license || 'N/A'}</span>
+                <span style={{ fontWeight: '500', textAlign: 'right' }}>{packageData.license || 'N/A'}</span>
               </div>
               {packageData.homepage && (
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ color: '#6b7280' }}>Homepage:</span>
                   <a href={packageData.homepage} target="_blank" rel="noopener noreferrer"
-                     style={{ color: '#2563eb', textDecoration: 'none', marginLeft: '8px', maxWidth: '12rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                     style={{ 
+                       color: '#2563eb', 
+                       textDecoration: 'none', 
+                       textAlign: 'right',
+                       maxWidth: '60%', 
+                       overflow: 'hidden', 
+                       textOverflow: 'ellipsis',
+                       whiteSpace: 'nowrap'
+                     }}
                      onMouseEnter={(e) => e.target.style.color = '#1d4ed8'}
                      onMouseLeave={(e) => e.target.style.color = '#2563eb'}>
                     {packageData.homepage.replace('https://', '')}
@@ -85,11 +93,19 @@ export default function PackageHeader({ loading, error, packageData, onClose }) 
                 </div>
               )}
               {/* Repository - Always show this row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#6b7280' }}>Repository:</span>
                 {packageData.repository ? (
                   <a href={packageData.repository} target="_blank" rel="noopener noreferrer"
-                     style={{ color: '#2563eb', textDecoration: 'none', marginLeft: '8px', maxWidth: '12rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                     style={{ 
+                       color: '#2563eb', 
+                       textDecoration: 'none', 
+                       textAlign: 'right',
+                       maxWidth: '60%', 
+                       overflow: 'hidden', 
+                       textOverflow: 'ellipsis',
+                       whiteSpace: 'nowrap'
+                     }}
                      onMouseEnter={(e) => e.target.style.color = '#1d4ed8'}
                      onMouseLeave={(e) => e.target.style.color = '#2563eb'}>
                     {packageData.repository.replace('https://github.com/', '')}
@@ -102,16 +118,25 @@ export default function PackageHeader({ loading, error, packageData, onClose }) 
                     backgroundColor: '#fef2f2',
                     padding: '2px 6px',
                     borderRadius: '4px',
-                    border: '1px solid #fecaca'
+                    border: '1px solid #fecaca',
+                    textAlign: 'right'
                   }}>
                     No repository information
                   </span>
                 )}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: '#6b7280' }}>npm URL:</span>
                 <a href={packageData.npm_url} target="_blank" rel="noopener noreferrer"
-                   style={{ color: '#2563eb', textDecoration: 'none', marginLeft: '8px', maxWidth: '12rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                   style={{ 
+                     color: '#2563eb', 
+                     textDecoration: 'none', 
+                     textAlign: 'right',
+                     maxWidth: '60%', 
+                     overflow: 'hidden', 
+                     textOverflow: 'ellipsis',
+                     whiteSpace: 'nowrap'
+                   }}
                    onMouseEnter={(e) => e.target.style.color = '#1d4ed8'}
                    onMouseLeave={(e) => e.target.style.color = '#2563eb'}>
                   npmjs.com/package/{packageData.name}
