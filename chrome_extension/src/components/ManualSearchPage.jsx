@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Package, Sparkles } from 'lucide-react';
 import SearchPage from './SearchPage';
 import { usePackageSearch } from '../hooks/usePackageSearch';
 
-export default function ManualSearchPage({ onSelectPackage, onClose, onSearchPerformed }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [hasSearched, setHasSearched] = useState(false);
+export default function ManualSearchPage({ 
+  onSelectPackage, 
+  onClose, 
+  onSearchPerformed, 
+  initialQuery = '', 
+  hasSearched = false 
+}) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [hasSearchedLocal, setHasSearchedLocal] = useState(hasSearched);
+
+  // Use the prop values on mount and when they change
+  useEffect(() => {
+    setHasSearchedLocal(hasSearched);
+    setSearchQuery(initialQuery);
+  }, [hasSearched, initialQuery]);
 
   // Use the search hook with the manual query
   const {
     searchResults,
     loading: searchLoading,
     error: searchError
-  } = usePackageSearch(hasSearched ? searchQuery : '');
+  } = usePackageSearch(hasSearchedLocal ? searchQuery : '');
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim().length >= 2) {
-      setHasSearched(true);
+      setHasSearchedLocal(true);
       // Notify parent of the search query
       if (onSearchPerformed) {
         onSearchPerformed(searchQuery.trim());
@@ -29,7 +41,7 @@ export default function ManualSearchPage({ onSelectPackage, onClose, onSearchPer
     setSearchQuery(e.target.value);
     // Reset search state if input is cleared
     if (e.target.value.trim().length === 0) {
-      setHasSearched(false);
+      setHasSearchedLocal(false);
     }
   };
 
@@ -40,7 +52,7 @@ export default function ManualSearchPage({ onSelectPackage, onClose, onSearchPer
   };
 
   // If we have searched and have a query, show the search results page
-  if (hasSearched && searchQuery.trim()) {
+  if (hasSearchedLocal && searchQuery.trim()) {
     return (
       <SearchPage
         selectedText={searchQuery}
@@ -50,7 +62,7 @@ export default function ManualSearchPage({ onSelectPackage, onClose, onSearchPer
         onSelectPackage={onSelectPackage}
         onClose={onClose}
         isManualSearch={true}
-        onBackToManualSearch={() => setHasSearched(false)}
+        onBackToManualSearch={() => setHasSearchedLocal(false)}
       />
     );
   }

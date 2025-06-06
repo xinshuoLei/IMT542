@@ -7,8 +7,7 @@ import { usePackageData } from '../hooks/usePackageData';
 import { usePackageSearch } from '../hooks/usePackageSearch';
 import { getCategoriesData } from '../utils/dataProcessors';
 
-// TODO: Remove this hardcoded value in next step
-const FALLBACK_PACKAGE_NAME = 'echarts';
+const DEFAULT_FOOTER_TEXT = 'No package selected';
 
 const categories = [
   { key: 'communityAdoption', title: 'Community Adoption' },
@@ -25,6 +24,10 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [hasSelectedPackage, setHasSelectedPackage] = useState(false);
   const [currentSearchQuery, setCurrentSearchQuery] = useState(selectedText); // Track current search context
+  
+  // NEW: State for manual search persistence
+  const [manualSearchQuery, setManualSearchQuery] = useState('');
+  const [hasPerformedManualSearch, setHasPerformedManualSearch] = useState(false);
 
   // Custom hooks
   const {
@@ -52,6 +55,8 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
     setSelectedPackage(null);
     setHasSelectedPackage(false);
     setCurrentSearchQuery(selectedText); // Initialize with selectedText
+    setManualSearchQuery(''); // Reset manual search state
+    setHasPerformedManualSearch(false); // Reset manual search state
     clearPackageData();
     
     // Determine initial view based on selectedText
@@ -92,27 +97,23 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
 
   // Function to go back to search
   const handleBackToSearch = () => {
-    if (currentSearchQuery && currentSearchQuery.trim().length >= 2) {
-      // If we have a current search query, go back to search results
-      setShowSearchPage(true);
-      setShowManualSearch(false);
-    } else {
-      // If no search query, go back to manual search
-      setShowSearchPage(false);
-      setShowManualSearch(true);
-    }
+    // Always go back to search results
+    setShowSearchPage(true);
+    setShowManualSearch(false);
     setSelectedPackage(null);
     setHasSelectedPackage(false);
     clearPackageData();
   };
 
-  // NEW: Function to go to manual search (clear everything) - JUST THE FUNCTION, NO UI YET
+  // NEW: Function to go to manual search (clear everything)
   const handleNewSearch = () => {
     setShowSearchPage(false);
     setShowManualSearch(true);
     setSelectedPackage(null);
     setHasSelectedPackage(false);
     setCurrentSearchQuery(''); // Clear the search query
+    setManualSearchQuery(''); // Clear manual search state
+    setHasPerformedManualSearch(false); // Reset manual search state
     clearPackageData();
   };
 
@@ -148,7 +149,13 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
         <ManualSearchPage
           onSelectPackage={handleSelectPackage}
           onClose={onClose}
-          onSearchPerformed={(query) => setCurrentSearchQuery(query)}
+          onSearchPerformed={(query) => {
+            setCurrentSearchQuery(query);
+            setManualSearchQuery(query);
+            setHasPerformedManualSearch(true);
+          }}
+          initialQuery={manualSearchQuery}
+          hasSearched={hasPerformedManualSearch}
         />
       ) : showSearchPage ? (
         <SearchPage
@@ -257,7 +264,7 @@ export default function PackageHealthPanel({ onClose, selectedText = '' }) {
           {/* Footer */}
           <div style={{ backgroundColor: 'white', borderTop: '1px solid #e5e7eb', padding: '12px' }}>
             <p style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', margin: 0 }}>
-              Package Health Extension - Analyzing: {selectedPackage?.name || packageData?.name || FALLBACK_PACKAGE_NAME}
+              Package Health Extension - Analyzing: {selectedPackage?.name || packageData?.name || DEFAULT_FOOTER_TEXT}
             </p>
           </div>
         </>
