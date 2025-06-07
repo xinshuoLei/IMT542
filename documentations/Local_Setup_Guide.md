@@ -11,6 +11,7 @@ Instructions for running the system on your local machine.
 - [Configuration](#configuration)  
 - [Using the Chrome Extension](#using-the-chrome-extension)  
 
+
 ### Prerequisites
 
 - **Python 3.8+** (for the backend API)  

@@ -18,5 +18,6 @@ This system helps developers assess the health and usability of JavaScript packa
   
 ### Documentations
 
-- **[Local Setup Guide](documentations/Local%20Setup%20Guide.md)** - Instructions for running the system locally
-- **[Final Presentation Slides (PDF)](documentations/Final%20Presentation%20Slides.pdf)** - In-class presentation slides that provide a high-level overview of the project’s information story, structure, FAIR assessment, and quality considerations
+- **[Local Setup Guide](documentations/Local_Setup_Guide.md)** - Instructions for running the system locally
+- **[Final Presentation Slides (PDF)](documentations/Final_Presentation_Slides.pdf)** - In-class presentation slides that provide a high-level overview of the project’s information story, structure, FAIR assessment, and quality considerations
+- **[Information Story](documentations/Information_Story.md)** – Motivations for building the system, the problem it targets, and the information structure needed to effectively solve it
