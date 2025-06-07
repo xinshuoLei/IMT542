@@ -38,7 +38,6 @@ Desired performance and quality, current state of the system, and remediation pl
 - **Response Time Tests**: Measure how quickly package queries return results under normal usage
 - **[Not completed] Load/Stress Testing**: Planned but not implemented — intended to simulate multiple concurrent queries and observe system stability  
 
----
 
 ### Evaluation of the Current System's Quality and Performance
 | Category              | Evaluation                                                                                   |
@@ -49,7 +48,7 @@ Desired performance and quality, current state of the system, and remediation pl
 | **Error Handling**    | ✅ Incomplete or missing data is safely captured in the `errors` field; responses degrade gracefully |
 | **Efficiency**        | ✅ The `/health` endpoint responds in under 600 ms for common packages, enabling smooth, real-time use in the Chrome extension |
 
-**Known Limitations and Remediation Plan**  
+#### Known Limitations and Remediation Plan
 The current system lacks robust handling of concurrent queries. A caching layer (e.g., Redis) is planned to prevent redundant requests and reduce pressure on upstream APIs.
 
 ### Continuous Performance and Quality Assurance
