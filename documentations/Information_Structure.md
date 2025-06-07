@@ -25,7 +25,7 @@ Existing health and usability information about a package is scattered across pl
 
 ### Requirements for the New Information Structure
 
-As discussed in the [Information Story](documentations/Information_Story.md), to support centralized health and usability insights that enable more confident and informed decisions regarding package adoption, the new information structure should meet the following requirements:
+As discussed in the [Information Story](../documentations/Information_Story.md), to support centralized health and usability insights that enable more confident and informed decisions regarding package adoption, the new information structure should meet the following requirements:
 
 **Structure and Information Provided**
 

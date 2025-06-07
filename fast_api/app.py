@@ -39,37 +39,37 @@ async def root():
         "available_endpoints": [
             {
                 "path": "/health/?package={package_name}",
-                "description": "Get comprehensive health and usability data for an npm package",
+                "description": "Returns comprehensive health and usability data for an npm package",
                 "example": "/health?package=react"
             },
             {
                 "path": "/health/rating-criteria",
-                "description": "Get rating criteria and thresholds used for calculating package health ratings",
+                "description": "Returns rating criteria and thresholds used for calculating package health ratings",
                 "example": "/health/rating-criteria"
             },
             {
                 "path": "/npm/metadata?package={package_name}",
-                "description": "Get basic metadata about an npm package",
+                "description": "Returns basic metadata about an npm package",
                 "example": "/npm/metadata?package=react"
             },
             {
                 "path": "/npm/downloads?package={package_name}",
-                "description": "Get download statistics for an npm package",
+                "description": "Returns download statistics for an npm package",
                 "example": "/npm/downloads?package=react"
             },
             {
                 "path": "/github/repo/{owner}/{repo}",
-                "description": "Get GitHub repository data like stars, forks, and issues",
+                "description": "Returns GitHub repository data like stars, forks, and issues",
                 "example": "/github/repo/facebook/react"
             },
             {
                 "path": "/github/health/{owner}/{repo}",
-                "description": "Get GitHub community health metrics",
+                "description": "Returns GitHub community health metrics",
                 "example": "/github/health/facebook/react"
             },
             {
                 "path": "/github/activity/{owner}/{repo}",
-                "description": "Get GitHub activity and contribution metrics",
+                "description": "Returns GitHub activity and contribution metrics",
                 "example": "/github/activity/facebook/react"
             }
         ],
