@@ -1,4 +1,3 @@
-
 ## Local Setup Guide
 
 Instructions for running the JavaScript Package Health & Usability System on your local machine.
@@ -10,14 +9,14 @@ Instructions for running the JavaScript Package Health & Usability System on you
 - [Backend Setup (FastAPI)](#backend-setup-fastapi)  
 - [Chrome Extension Setup](#chrome-extension-setup)  
 - [Configuration](#configuration)  
-- [Running the System](#running-the-system)  
+- [Using the Chrome Extension](#using-the-chrome-extension)  
 
 ### Prerequisites
 
 - **Python 3.8+** (for the backend API)  
 - **Node.js 16+** and **npm** (for building the Chrome extension)  
   - Installation guide: [Downloading and installing Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)  
-- **Google Chrome** or another **Chromium-based browser**  
+- **Google Chrome**
 - **GitHub Personal Access Token** (required for GitHub API access)  
 
 ### Initial Setup
@@ -74,13 +73,13 @@ Create a `.env` file in the `fast_api` directory to enable GitHub API access:
 
 ```bash
 # .env file
-# Replace <your_github_personal_access_token_here> with your actual token
-GITHUB_TOKEN=<your_github_personal_access_token_here>
+# Replace <your_github_personal_access_token> with your actual token
+GITHUB_TOKEN=<your_github_personal_access_token>
 ```
 
-See [GitHub’s official guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) for instructions on creating a personal access token.
+See [GitHub's official guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) for instructions on creating a personal access token.
 
-> **Note:** We recommend using a fine-grained token for improved security and more granular permissions.
+> A fine-grained token is recommended for this system to improve security and allow more precise permission control.
 
 #### 6. Start the API server
 
@@ -88,9 +87,9 @@ See [GitHub’s official guide](https://docs.github.com/en/authentication/keepin
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-> **Note:** Running on port 8000 is optional. If you use a different port or host, remember to update the API URL in the [extension's options page](#configure-api-url-if-needed).
+> Running on port 8000 is optional. If you use a different port or host, remember to update the API URL in the [extension's options page](#configure-api-url-if-needed).
 
-The API will be available at: `http://localhost:8000`
+If you used the default command above (with no changes to host or port), the API will be available at: `http://localhost:8000`
 
 **Verify the API is running:**
 
@@ -122,21 +121,32 @@ This creates a `dist` folder with the compiled extension files.
 
 #### 4. Load the extension in Chrome
 
-1. **Open Chrome and navigate to the Extensions page:**
-   - Type `chrome://extensions/` in the address bar, or  
-   - Go to Chrome menu → More tools → Extensions  
-
-2. **Enable Developer Mode:**
-   - Toggle the "Developer mode" switch in the top-right corner  
-
-3. **Load the extension:**
-   - Click “Load unpacked”  
-   - Select the `chrome_extension/dist` folder  
-   - The extension should now appear in your extensions list  
-
-4. **Verify installation:**
-   - Look for the “JavaScript Package Health” extension  
-   - (Optional) Pin it to the toolbar for quick access  
+<ol type="i">
+  <li><strong>Open Chrome and navigate to the Extensions page:</strong>
+    <ul>
+      <li>Type <code>chrome://extensions/</code> in the address bar, or</li>
+      <li>Go to Chrome menu → More tools → Extensions</li>
+    </ul>
+  </li>
+  <li><strong>Enable Developer Mode:</strong>
+    <ul>
+      <li>Toggle the "Developer mode" switch in the top-right corner</li>
+    </ul>
+  </li>
+  <li><strong>Load the extension:</strong>
+    <ul>
+      <li>Click "Load unpacked"</li>
+      <li>Select the <code>chrome_extension/dist</code> folder</li>
+      <li>The extension should now appear in your extensions list</li>
+    </ul>
+  </li>
+  <li><strong>Verify installation:</strong>
+    <ul>
+      <li>Look for the "JavaScript Package Health" extension</li>
+      <li>(Optional) Pin it to the toolbar for quick access</li>
+    </ul>
+  </li>
+</ol>
 
 ### Configuration
 
@@ -154,38 +164,24 @@ Common alternative URLs:
 - `http://localhost:3001`  
 - Custom domain: `https://your-api-domain.com`  
 
-### Running the System
-
-#### 1. Start the backend API
-
-First, navigate to the backend directory and activate your virtual environment:
-
-```bash
-cd fast_api
-
-# On Windows
-venv\Scripts\activate
-
-# On macOS/Linux
-source venv/bin/activate
-```
-
-Then start the API server:
-
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-
-> **Note:** If you change the port or host, remember to update the API URL in the [extension’s options page](#configure-api-url-if-needed).
-
-#### 2. Use the Chrome extension
-
-The extension is now ready! You can:
-
-- **Highlight package names** on any webpage and press `Ctrl+H` (`Cmd+H` on Mac)  
-- **Click the extension icon** to search manually  
-- **View detailed health metrics** for any npm package  
-
 ---
 
-**Next Steps:** Return to the [main README](README.md) for an overview of the system and additional documentation.
+This marks the completion of the setup process 🎉 
+
+Before using the extension, make sure:
+
+- The backend API is running at `http://localhost:8000` (or your configured URL)
+- The Chrome extension is loaded and appears in your extensions list
+- The extension is configured with the correct API URL (if using a non-default host or port)
+
+### Using the Chrome Extension
+
+> **Note:** The extension will only open when you're on an active webpage. It will not work on a blank new tab.
+
+Start searching for a package by:
+
+- **Highlighting a package name** on any webpage and pressing `Ctrl+H` (`Cmd+H` on Mac), or  
+- **Clicking the extension icon** to open the search interface manually  
+
+From the search results, select a package to view detailed health and usability metrics.
+

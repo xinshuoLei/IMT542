@@ -14,6 +14,6 @@ This system provides developers with actionable insights about JavaScript packag
 - **Browser Integration**: Chrome extension with text selection and manual search capabilities
 - **Interactive Visualizations**: Download trend charts and comprehensive metric displays
 
-## Documentation
+## Documentations
 
 - **[Local Setup Guide](documentations/local_setup_guide.md)** - Instructions for running the system locally
