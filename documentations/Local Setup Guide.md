@@ -1,6 +1,6 @@
 ## Local Setup Guide
 
-Instructions for running the JavaScript Package Health & Usability System on your local machine.
+Instructions for running the system on your local machine.
 
 ### Table of Contents
 
