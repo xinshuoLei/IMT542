@@ -1,5 +1,7 @@
 ## Information Story
 
+Motivations for building the system, the problem it targets, and the information structure needed to effectively solve it.
+
 ### Table of Contents
 
   - [Background, Motivation, and Problem Statement](#background-motivation-and-problem-statement)
