@@ -7,14 +7,25 @@ Xinshuo Lei
 
 ### Overview
 
+
+![Architecture Diagram](/documentations/images/system_architecture.png)
+
 This system helps developers assess the health and usability of JavaScript packages by aggregating data from sources like npm, GitHub, and download statistics. The information is presented as clear, actionable insights through an intuitive Chrome extension interface, and users can also access the raw data directly via the API.
 
 #### Key Features
 
 - **Real-time package analysis**: Instantly view health metrics for any npm package  
 - **Integrated data sources**: Aggregates key signals from both npm and GitHub  
-- **Five health and usability categories**: Community adoption, maintenance frequency, release management, implementation footprint, and documentation completeness  
+- **Multi-dimensional health and usabillity evaluation**: Assesses packages across community adoption, maintenance frequency, release management, implementation footprint, and documentation completeness. Refer to the [Ratings Calculation](/documentations/Ratings_Calculation.md) document for a detailed description of each dimension and how its score is calculated.
 - **Browser integration**: Instantly access insights in context, without leaving the page
+
+#### System Demo
+
+![System Demo](documentations/images/chrome_extension_score.png)
+
+**Full feature demo videos**
+1. [Quick search via text highlight and keyboard shortcut](https://drive.google.com/file/d/1TlMfa-atrZcUlbYrbe4JJjTO04aCE3K9/view?usp=sharing)
+2. [Manual search](https://drive.google.com/file/d/1jIGkkWMrje6W4vvLZ57mp58R_TWgGu6t/view?usp=sharing)
   
 ### Documentations
 

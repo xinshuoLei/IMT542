@@ -155,10 +155,12 @@ This creates a `dist` folder with the compiled extension files.
 
 If your API runs on a different port or host:
 
-1. **Right-click the extension icon** → **Options**  
-2. **Set the API Base URL** (default: `http://localhost:8000`)  
-3. **Test the Connection** to verify it works  
-4. **Save Settings**  
+![Extension Options](../documentations/images/extension_options.png)
+
+1. Click the **extensions icon** (puzzle piece in the top-right corner of Chrome) →  Find **JavaScript Package Health** →  Click the **three dots (⋮)** next to it →  Select **Options**
+1. On the options page, **eet the API Base URL** (default: `http://localhost:8000`)  
+2. **Test the Connection** to verify it works  
+3. **Save Settings**  
 
 Common alternative URLs:
 - `http://127.0.0.1:8000`  
@@ -181,8 +183,14 @@ Before using the extension, make sure:
 
 Start searching for a package by:
 
+![System Demo](../documentations/images/chrome_extension_search.png)
+
 - **Highlighting a package name** on any webpage and pressing `Ctrl+H` (`Cmd+H` on Mac), or  
 - **Clicking the extension icon** to open the search interface manually  
 
 From the search results, select a package to view detailed health and usability metrics.
+
+![System Demo](../documentations/images/chrome_extension_score.png)
+
+
 

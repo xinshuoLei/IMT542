@@ -2,7 +2,7 @@
 
 Ways to access the transformed information structure, as supported by the system architecture shown below.
 
-![Architecture Diagram](../documentations/images/system-architecture.png)
+![Architecture Diagram](../documentations/images/system_architecture.png)
 
 ### Table of Contents
 
@@ -37,7 +37,7 @@ The Chrome extension provides a lightweight, in-browser interface for accessing 
 
 This mode of access is designed to support developers in real time, offering context-aware insights directly within their development workflows.
 
-![Chrome Extension](../documentations/images/chrome-extension.png)
+![Chrome Extension](../documentations/images/chrome_extension_score.png)
 
 
 Refer to the [Local Setup Guide](../documentations/Local_Setup_Guide.md) for setup instructions and usage guidance for the Chrome extension.
